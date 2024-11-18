@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Chatbot
+{% endblock %}
+
+{% block content %}
+    <div class="chat-container">
+        <div class="messages" id="messages"></div>
+        <input type="text" class="user-input" id="user_input" placeholder="Digite sua mensagem">
+        <button class="send-button" onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <script>
+        function appendMessage(message, sender) {
+            let messageContainer = document.createElement("div");
+            messageContainer.innerText = sender + ": " + message;
+            document.getElementById("messages").appendChild(messageContainer);
+        }
+
+        async function sendMessage() {
+            let userInput = document.getElementById("user_input").value;
+            appendMessage(userInput, "Você");
+            document.getElementById("user_input").value = "";
+
+            // Envia a mensagem com CSRF token
+            let response = await fetch('/chatbot/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'  // CSRF token
+                },
+                body: 'user_input=' + encodeURIComponent(userInput)
+            });
+
+            let data = await response.json();
+            appendMessage(data.message, "Assistente");
+        }
+    </script>
+{% endblock %}
