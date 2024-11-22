@@ -1,7 +1,6 @@
 from langchain_ollama import OllamaLLM
 from langchain.prompts import ChatPromptTemplate
 
-# Dados iniciais
 businessName = "Assistência ao Cliente"
 faq_menu = """
 1. Quais são os horários de funcionamento?
@@ -61,42 +60,8 @@ def generate_response(context: str, user_input: str):
         )
         response = model.invoke(filled_prompt)
 
-        #atualizar o contexto com a nova interação
+        #atualiza o contexto com a nova interação
         context += f"Usuário: {user_input}\nAssistente: {response}\n"
 
-        #retornar a resposta e o contexto atualizado
+        #retorna a resposta e o contexto atualizado
         return response, context
-
-#exemplo de interação
-if __name__ == "__main__":
-    #inicializando o contexto
-    context = ""
-
-    #boas-vindas iniciais
-    print("Bem-vindo à Assistência ao Cliente! Como posso ajudar?")
-    print(faq_menu)
-
-    #ciclo de interação com o chatbot
-    while True:
-        user_input = input("Você: ").strip().lower()
-
-        #verifica se o usuário quer sair
-        if user_input in ["sair", "exit", "quit"]:
-            context = ""
-            print("Assistente: Obrigado por entrar em contato. Até logo!")
-            break
-
-        #verifica se a entrada é válida no menu
-        if user_input in faq_responses:
-            response = faq_responses[user_input]
-            print("Assistente:", response)
-            context += f"Usuário: {user_input}\nAssistente: {response}\n"
-            continue
-
-        #se a entrada não for válida, o modelo irá gerar uma resposta
-        response, context = generate_response(context, user_input)
-        
-        #mostra a resposta do assistente e o menu, caso necessário
-        print("Assistente:", response)
-        print("\nCaso precise de mais ajuda, consulte o menu novamente abaixo:")
-        print(faq_menu)

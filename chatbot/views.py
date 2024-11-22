@@ -1,35 +1,50 @@
-# views.py
-from django.shortcuts import render
 from django.http import JsonResponse
+from django.shortcuts import render
 from .models import ChatContext
 from .ai_model import generate_response
 
+
+def get_chat_context(request):
+    """
+    Retorna o contexto do chat da sessão ou do banco de dados.
+    """
+    if request.user.is_authenticated:
+        chat_context_obj = ChatContext.objects.filter(user=request.user).first()
+        if chat_context_obj:
+            return chat_context_obj.context
+    return request.session.get('chat_context', '')
+
+
+def save_chat_context(request, context):
+    """
+    Salva o contexto do chat na sessão e, se o usuário estiver autenticado, no banco de dados.
+    """
+    request.session['chat_context'] = context
+    if request.user.is_authenticated:
+        chat_context, created = ChatContext.objects.get_or_create(user=request.user)
+        chat_context.context = context
+        chat_context.save()
+
+
+def get_initial_context(request):
+    if request.method == "GET":
+        chat_context = get_chat_context(request)
+        return JsonResponse({'context': chat_context})
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
 def chat_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user_input = request.POST.get('user_input')
+        context = get_chat_context(request)
 
-        # Recupera o contexto do chat da sessão, se disponível
-        context = request.session.get('chat_context', '')
+        # Gera a resposta usando o utilitário
+        response, updated_context = generate_response(context, user_input)
 
-        # Caso o contexto não exista na sessão, tenta buscar no banco de dados
-        if not context and request.user.is_authenticated:
-            chat_context, created = ChatContext.objects.get_or_create(user=request.user)
-            context = chat_context.context
+        # Salva o novo contexto
+        save_chat_context(request, updated_context)
 
-        # Chama a função de geração de resposta com o contexto e entrada do usuário
-        resposta, context = generate_response(context, user_input)
+        return JsonResponse({'message': response})
 
-        # Atualiza o contexto na sessão
-        request.session['chat_context'] = context
-
-        # Atualiza ou cria o contexto no banco de dados
-        if request.user.is_authenticated:
-            chat_context.context = context
-            chat_context.save()
-
-        # Retorna a resposta em formato JSON
-        return JsonResponse({'message': resposta})
-
-    else:
-        # Renderiza o template de chat pela primeira vez
-        return render(request, "chatbot/chat.html")
+    # Renderiza o template de chat para requisições GET
+    return render(request, "chatbot/chat.html")
