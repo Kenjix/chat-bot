@@ -23,35 +23,34 @@ faq_responses = {
 
 #template do prompt usando ChatPromptTemplate
 prompt = ChatPromptTemplate.from_messages([
-    ("system", "Você é um assistente virtual para {businessName}. Seu objetivo é responder apenas se o usuário não escolher uma opção válida do menu abaixo e ajudá-lo a inserir uma opção válida apontado onde ele está errando."),
+    ("system", "Você é um assistente virtual para {businessName}. Seu objetivo principal é ajudar os usuários com questões relacionadas ao negócio, incluindo o menu de Perguntas Frequentes (FAQ) e perguntas relevantes ao escopo da assistência."),
     ("system", "Menu de Perguntas Frequentes (FAQ):\n{faq_menu}"),
-    ("system", "Caso o cliente insira uma opção inválida, seja educado e mostre novamente o menu."),
-    ("system", "Responda somente em portugues do Brasil."),
+    ("system", "Se o usuário inserir uma opção inválida ou uma pergunta fora do escopo, seja educado, mostre o menu novamente e explique como você pode ajudar."),
+    ("system", "Você deve responder somente em português do Brasil e ser sempre direto e objetivo nas orientações."),
     ("user", "{context}"),
     ("user", "{user_input}"),
     ("assistant", "Assistente: "),
 ])
 
-#instanciando o modelo
+#instanciando o modelo de ia
 model = OllamaLLM(model="llama3.1:8b")
 
-#função para gerar resposta usando o ChatPromptTemplate
+#funcao para gerar resposta do assistente virtual
 def generate_response(context: str, user_input: str):
     """
     Gera uma resposta do assistente virtual com base no contexto e na entrada do usuário.
     """
-    #verifica se o input do usuário corresponde a uma opção válida
+    #verifica se o input do usuario corresponde a uma opção válida do FAQ
     if user_input in ["sair", "exit", "quit"]:
         context = ""
         response = "Obrigado por entrar em contato. Até logo!"
         return response, context
     elif user_input.strip() in faq_responses:
-        #retorna a resposta direta sem chamar o modelo
         response = faq_responses[user_input.strip()]
         context += f"Usuário: {user_input}\nAssistente: {response}\n"
-        return response, context
+        return response, context    
     else:
-        #substituir variáveis no template e gera resposta do modelo
+        #gera uma resposta usando o modelo
         filled_prompt = prompt.format(
             businessName=businessName,
             faq_menu=faq_menu,
@@ -60,8 +59,7 @@ def generate_response(context: str, user_input: str):
         )
         response = model.invoke(filled_prompt)
 
-        #atualiza o contexto com a nova interação
+        #atualiza o contexto com a nova interacao
         context += f"Usuário: {user_input}\nAssistente: {response}\n"
 
-        #retorna a resposta e o contexto atualizado
         return response, context

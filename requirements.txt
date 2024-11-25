@@ -2,3 +2,4 @@ django
 langchain 
 langchain-ollama 
 ollama
+python-decouple

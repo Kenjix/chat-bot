@@ -1,77 +1,79 @@
-// Função para adicionar uma nova mensagem à interface
-// Função para adicionar uma nova mensagem à interface
-// Função para adicionar uma nova mensagem à interface
+//adiciona uma nova mensagem no chat
 function appendMessage(message, sender, isTyping = false) {
 	const messagesContainer = document.getElementById("messages");
 	const messageBubble = document.createElement("div");
 
-	messageBubble.className = `message ${sender === "Você" ? "user" : "assistant"}`;
+	messageBubble.className = `message ${
+		sender === "Usuário" ? "user" : "assistant"
+	}`;
 
 	if (isTyping) {
-		// Verifica se já existe um status "digitando..."
+		//verifica o status "digitando..."
 		if (document.getElementById("typing-status")) return;
 
-		messageBubble.id = "typing-status"; // Adiciona ID para o status "digitando..."
+		messageBubble.id = "typing-status"; //adiciona ID para o status "digitando..."
 		messageBubble.innerHTML = `
 			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente">
 			<span class="typing-indicator"><b>Assistente:</b> Digitando...</span>
 		`;
 	} else {
-		// Substitui quebras de linha \n por <br> para visualização correta
+		//substitui quebras de linha \n por <br> para visualização correta
 		const formattedMessage = message.replace(/\n/g, "<br>");
-		
-		messageBubble.innerHTML = sender === "Você"
-			? `<span class="sender">${sender}:</span> ${formattedMessage}`
-			: `
-				<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente">
-				<span class="sender">${sender}:</span> ${formattedMessage}
+
+		messageBubble.innerHTML =
+			sender === "Usuário"
+				? `<span class="sender">Você:</span>${formattedMessage}`
+				: `
+			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente">
+			<span class="sender">${sender}:&nbsp;</span>${formattedMessage}
 			`;
 	}
 
 	messagesContainer.appendChild(messageBubble);
-	messagesContainer.scrollTop = messagesContainer.scrollHeight; // Rolagem automática
+	messagesContainer.scrollTop = messagesContainer.scrollHeight; //rolagem automática
 }
 
-
-// Função para carregar o histórico de mensagens
+//funcao para carregar o histórico de mensagens
 async function loadInitialMessages(context) {
 	if (!context) {
 		appendMessage(
-			"Olá! Eu sou o assistente virtual. Como posso te ajudar hoje?\n\n" + 
-                "Aqui estão algumas opções comuns para começar:\n" +
-				"1. Quais são os horários de funcionamento?\n" +
-				"2. Como posso alterar ou cancelar um pedido?\n" +
-				"3. Quais são as formas de pagamento aceitas?\n" +
-				"4. Como rastrear meu pedido?\n" +
-				"5. Tenho dúvidas sobre garantia ou devolução.\n" +
-				"6. Falar com um atendente.\n\n" +
-				"Basta selecionar uma opção ou me fazer uma pergunta!",
+			`Olá! Eu sou o assistente virtual de agendamentos. Como posso te ajudar hoje?\n\n` +
+				`Aqui estão algumas opções comuns para começar:\n` +
+				`1. Quais exames estão disponíveis para agendamento?\n` +
+				`2. Como faço para agendar um exame?\n` +
+				`3. Preciso de algum documento para realizar o exame?\n` +
+				`4. Qual é o endereço da unidade mais próxima?\n` +
+				`5. Posso reagendar ou cancelar meu exame?\n` +
+				`6. Quais os horários disponíveis para exames?\n\n` +
+				`Basta selecionar uma opção ou me fazer uma pergunta!`,
 			"Assistente"
 		);
 		console.warn("Contexto inicial não fornecido.");
 		return;
 	}
 
-	const lines = context.split("\n");
-	lines.forEach((line) => {
-		if (line.startsWith("Usuário:")) {
-			appendMessage(line.replace("Usuário: ", ""), "Você");
-		} else if (line.startsWith("Assistente:")) {
-			appendMessage(line.replace("Assistente: ", ""), "Assistente");
-		}
-	});
+	//expressão regular para capturar as mensagens
+	const regex = /(Usuário:|Assistente:)\s(.+?)(?=(Usuário:|Assistente:|$))/gs;
+
+	let match;
+	while ((match = regex.exec(context)) !== null) {
+		//determina o remetente e mensagem
+		const sender = match[1].replace(":", "").trim(); //remove ":" e espaços extras
+		const message = match[2].trim(); //captura o conteudo da mensagem
+		appendMessage(message, sender); //adiciona a mensagem no chat
+	}
 }
 
-// Função para enviar uma nova mensagem
+//funcao para enviar uma nova mensagem
 async function sendMessage() {
 	const userInput = document.getElementById("user_input").value.trim();
 	if (!userInput) return;
 
-	// Exibe a mensagem do usuário
-	appendMessage(userInput, "Você");
+	//exibe a mensagem do usuario
+	appendMessage(userInput, "Usuário");
 	document.getElementById("user_input").value = "";
 
-	// Adiciona o status de digitação da assistente
+	//adiciona o status de digitando do assistente
 	appendMessage("", "Assistente", true);
 
 	const csrfToken = document.getElementById("csrf_token").value;
@@ -91,7 +93,7 @@ async function sendMessage() {
 		const typingStatus = document.getElementById("typing-status");
 		if (typingStatus) typingStatus.remove();
 
-		// Exibe a resposta da assistente
+		//exibe a resposta do assistente
 		appendMessage(data.message, "Assistente");
 	} catch (error) {
 		const typingStatus = document.getElementById("typing-status");
@@ -106,7 +108,10 @@ async function sendMessage() {
 
 // Função para tratar o envio de mensagem ao pressionar Enter
 function handleKeyPress(event) {
-	if (event.key === "Enter") sendMessage();
+	if (event.key === "Enter") {
+		event.preventDefault(); // Apenas previne o comportamento padrão ao pressionar "Enter"
+		sendMessage();
+	}
 }
 
 // Carregar o histórico quando a página for carregada

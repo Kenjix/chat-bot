@@ -38,13 +38,13 @@ def chat_view(request):
         user_input = request.POST.get('user_input')
         context = get_chat_context(request)
 
-        # Gera a resposta usando o utilitário
+        #gera a resposta usando o utilitário
         response, updated_context = generate_response(context, user_input)
 
-        # Salva o novo contexto
+        #salva o novo contexto
         save_chat_context(request, updated_context)
 
         return JsonResponse({'message': response})
 
-    # Renderiza o template de chat para requisições GET
+    #renderiza o template de chat para requisições GET
     return render(request, "chatbot/chat.html")
