@@ -1,5 +1,5 @@
-django
-langchain 
-langchain-ollama 
-ollama
-python-decouple
+Django==5.1.3
+langchain==0.3.19
+langchain-ollama==0.4.2
+ollama==0.4.2
+python-decouple==3.8

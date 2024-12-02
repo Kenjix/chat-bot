@@ -12,7 +12,7 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 - **Django**: Framework web backend para gerenciar rotas, lógica do chat, API e sessões.
 - **LangChain**: Para gerenciamento do fluxo de conversação e integração com o modelo de IA.
-- **Ollama**: Biblioteca para acessar e executar o modelo Llama 3 localmente.
+- **Ollama**: Biblioteca para acessar e executar o modelo Llama 3.1b localmente.
 - **Python-Decouple**: Para gerenciar configurações sensíveis, carregando variáveis de um arquivo `.env` de forma segura e organizada.
 
 ---
@@ -29,12 +29,12 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 1. **Perguntas Frequentes:**
 
-- "Qual o horário de atendimento?"
-- "Quais os meios de pagamento disponíveis?"
+- "Preciso de algum documento para realizar o exame?"
+- "Quais exames estão disponíveis para agendamento?"
 
 2. **Respostas via IA:**
 
-- Quando o usuário digita algo como: "Não sei como resolver meu problema", o modelo Llama 3 fornece orientações ou sugere um item do menu.
+- Quando o usuário digita algo como: "Posso apresentar a cartreira de motorista como identidade?", o modelo Llama 3.1 fornece orientações ou sugere um item do menu.
 
 2. **Histórico de Conversas:**
 
@@ -72,7 +72,7 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
     ```bash
     touch .env #Linux
-    mkdir .env #Windows
+    echo. > .env #Windows
     ```
 
 2.  **Certifique-se de definir as variáveis de ambiente necessárias no arquivo .env:**
@@ -97,15 +97,16 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 1. **Clone este repositório**
 
    ```bash
-   git clone https://github.com/Kenjix/chat-bot.git
-   cd seu-repositorio
+   git clone https://github.com/Kenjix/django-ollama-chatbot.git
+   cd django-ollama-chatbot
    ```
 
 2. **Crie e ative o ambiente virtual**
 
     ```bash
     python -m venv venv
-    source venv/bin/activate  # No Windows: venv\Scripts\activate
+    source venv/bin/activate  #Linux
+    venv/Scripts/activate #Windows
     ```
 
 3. **Instale as dependências**
@@ -137,7 +138,7 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 7. **Acesse a aplicação**
 
-- Abra seu navegador e acesse: http://127.0.0.1:8000.
+- Abra seu navegador e acesse: http://127.0.0.1:8000/chatbot/chat/.
 
 ---
 
