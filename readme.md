@@ -139,5 +139,7 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 - Abra seu navegador e acesse: http://127.0.0.1:8000.
 
+---
+
 ## 📝 Licença
 - Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
