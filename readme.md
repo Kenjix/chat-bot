@@ -42,6 +42,30 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 ---
 
+## 📂 Estrutura do Projeto
+
+    .
+    ├── chatbot/               # App do chat
+    │   ├── models.py          # Modelos de dados
+    │   ├── views.py           # Lógica das views do chat
+    │   ├── urls.py            # Rotas do app Chatbot
+    │   ├── templates/         # Templates HTML
+    |   ├── ai_model           # Lógica do modelo de IA
+    │   └── utils.py           # Funções auxiliares (ex.: manipulação do )
+    ├── core/                  # App principal do Django
+    │   ├── models.py          # Modelos de dados
+    │   ├── views.py           # Lógica das views principal
+    │   ├── urls.py            # Rotas do app
+    │   ├── templates/         # Templates HTML
+    ├── project/               # Configurações do projeto Django
+    │   ├── settings.py        # Configurações principais
+    │   └── urls.py            # Rotas root
+    ├── requirements.txt       # Dependências do projeto
+    ├── .env                   # Configuração de Ambiente
+    └── README.md              # Documentação do projeto
+
+---
+
 ## ⚙️ Configuração de Ambiente
 
 1. **Crie um arquivo .env na raiz do projeto**
@@ -114,29 +138,3 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 7. **Acesse a aplicação**
 
 - Abra seu navegador e acesse: http://127.0.0.1:8000.
-
----
-
-## 📂 Estrutura do Projeto
-
-    ```plaintext
-    .
-    ├── chatbot/               # App do chat
-    │   ├── models.py          # Modelos de dados
-    │   ├── views.py           # Lógica das views do chat
-    │   ├── urls.py            # Rotas do app Chatbot
-    │   ├── templates/         # Templates HTML
-    |   ├── ai_model           # Lógica do modelo de IA
-    │   └── utils.py           # Funções auxiliares (ex.: manipulação do )
-    ├── core/                  # App principal do Django
-    │   ├── models.py          # Modelos de dados
-    │   ├── views.py           # Lógica das views principal
-    │   ├── urls.py            # Rotas do app
-    │   ├── templates/         # Templates HTML
-    ├── project/               # Configurações do projeto Django
-    │   ├── settings.py        # Configurações principais
-    │   └── urls.py            # Rotas root
-    ├── requirements.txt       # Dependências do projeto
-    ├── .env                   # Configuração de Ambiente
-    └── README.md              # Documentação do projeto
-    ```
