@@ -12,7 +12,7 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 - **Django**: Framework web backend para gerenciar rotas, lógica do chat, API e sessões.
 - **LangChain**: Para gerenciamento do fluxo de conversação e integração com o modelo de IA.
-- **Ollama**: Biblioteca para acessar e executar o modelo Llama 3.1b localmente.
+- **Ollama**: Biblioteca para acessar e executar o modelo Llama 3.1:8b localmente.
 - **Python-Decouple**: Para gerenciar configurações sensíveis, carregando variáveis de um arquivo `.env` de forma segura e organizada.
 
 ---
