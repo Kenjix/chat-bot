@@ -144,3 +144,4 @@ Além disso, o sistema mantém um **histórico de conversas** baseado na sessão
 
 ## 📝 Licença
 - Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+- Robot icon Designed by Freepik

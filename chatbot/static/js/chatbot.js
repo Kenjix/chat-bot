@@ -11,29 +11,29 @@ function appendMessage(message, sender, isTyping = false) {
 		//verifica o status "digitando..."
 		if (document.getElementById("typing-status")) return;
 
-		messageBubble.id = "typing-status"; //adiciona ID para o status "digitando..."
+		messageBubble.id = "typing-status"; // Adiciona ID para o status "digitando..."
 		messageBubble.innerHTML = `
-			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente">
+			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente - Icon by Freepik.">
 			<span class="typing-indicator"><b>Assistente:</b> Digitando...</span>
 		`;
 	} else {
-		//substitui quebras de linha \n por <br> para visualização correta
+		//substitui quebras de linha \n por <br> para visualizacao correta
 		const formattedMessage = message.replace(/\n/g, "<br>");
 
 		messageBubble.innerHTML =
 			sender === "Usuário"
 				? `<span class="sender">Você:</span>${formattedMessage}`
 				: `
-			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente">
+			<img src="/static/images/robot-avatar.png" class="avatar" alt="Assistente - Icon by Freepik.">
 			<span class="sender">${sender}:&nbsp;</span>${formattedMessage}
 			`;
 	}
 
 	messagesContainer.appendChild(messageBubble);
-	messagesContainer.scrollTop = messagesContainer.scrollHeight; //rolagem automática
+	messagesContainer.scrollTop = messagesContainer.scrollHeight; //rolagem automatica
 }
 
-//funcao para carregar o histórico de mensagens
+//funcao para carregar o historico de mensagens
 async function loadInitialMessages(context) {
 	if (!context) {
 		appendMessage(
@@ -106,7 +106,7 @@ async function sendMessage() {
 	}
 }
 
-// Função para tratar o envio de mensagem ao pressionar Enter
+//funcao para tratar o envio de mensagem ao pressionar Enter
 function handleKeyPress(event) {
 	if (event.key === "Enter") {
 		event.preventDefault(); // Apenas previne o comportamento padrão ao pressionar "Enter"
@@ -114,20 +114,19 @@ function handleKeyPress(event) {
 	}
 }
 
-// Carregar o histórico quando a página for carregada
+//carrega o historico quando a página for carregada
 window.onload = function () {
 	fetchInitialMessages();
 };
 
-// Função para buscar as mensagens iniciais do servidor
+//funcao para buscar as mensagens iniciais do servidor
 async function fetchInitialMessages() {
-	// Obtém o CSRF token, caso seja necessário
+	//otem o CSRF token
 	const csrfToken = document.getElementById("csrf_token")?.value;
 
 	try {
 		const response = await fetch("/chatbot/initial-context/", {
-			// Substitua pela rota correta
-			method: "GET", // Use GET se estiver apenas recuperando o histórico
+			method: "GET", //recupera o historico
 			headers: {
 				"Content-Type": "application/json",
 				...(csrfToken && { "X-CSRFToken": csrfToken }),
@@ -140,9 +139,9 @@ async function fetchInitialMessages() {
 
 		const data = await response.json();
 
-		// Popula o chat com o contexto inicial
+		//popula o chat com o contexto inicial
 		if (data.context) {
-			loadInitialMessages(data.context); // Usa a função existente para processar o contexto
+			loadInitialMessages(data.context); //usa a funcao existente para processar o contexto
 		} else {
 			console.warn("Nenhum contexto inicial encontrado na resposta.");
 		}
@@ -155,7 +154,7 @@ async function fetchInitialMessages() {
 	}
 }
 
-// Atualização do window.onload
+//atualização do window.onload para carregar o historico de mensagens
 window.onload = async function () {
 	try {
 		const response = await fetch("/chatbot/initial-context/", {
